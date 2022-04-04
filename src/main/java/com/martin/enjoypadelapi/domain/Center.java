@@ -10,7 +10,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity(name = "center")
+@Entity(name = "centers")
 public class Center {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,16 +18,11 @@ public class Center {
     @Column
     private String name;
     @Column
-    private int capacity;
-    @Column(name = "changing_rooms")
-    private boolean changingRooms;
-    @Column (name = "subscription_price")
-    private float subscriptionPrice;
+    private String longitude;
+    @Column
+    private String latitude;
+
 
     @OneToMany(mappedBy = "center")
-    private List<Court> courts;
-
-    @ManyToOne
-    @JoinColumn(name = "city")
-    private City city;
+    private List<Match> matches;
 }

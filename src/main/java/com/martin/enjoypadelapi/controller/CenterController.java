@@ -1,9 +1,7 @@
 package com.martin.enjoypadelapi.controller;
 
 import com.martin.enjoypadelapi.domain.Center;
-import com.martin.enjoypadelapi.domain.dto.CenterDTO;
 import com.martin.enjoypadelapi.exception.CenterNotFoundException;
-import com.martin.enjoypadelapi.exception.CityNotFoundException;
 import com.martin.enjoypadelapi.exception.ErrorResponse;
 import com.martin.enjoypadelapi.service.CenterService;
 import org.slf4j.Logger;
@@ -14,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
 public class CenterController {
@@ -40,45 +37,27 @@ public class CenterController {
         return center;
     }
 
-    @GetMapping("/filtered/centers")
-    public List<Center> findFilteredCenters(@RequestParam(name = "minCapacity") int capacity,
-                                            @RequestParam(name = "changingRooms") boolean changingRooms,
-                                            @RequestParam(name = "maxPrice") float subscriptionPrice) {
-        logger.info("Inicio findFilteredCenters");
-        List<Center> centers = centerService.findFilteredCenters(capacity, changingRooms, subscriptionPrice);
-        logger.info("Final findFilteredCenters");
-        return centers;
-    }
-
     @PostMapping("/centers")
-    public Center addCenter (@RequestBody CenterDTO centerDto) throws CityNotFoundException {
+    public Center addCenter (@RequestBody Center center) {
         logger.info("Inicio addCenter");
-        Center center = centerService.addCenter(centerDto);
+        Center newCenter = centerService.addCenter(center);
         logger.info("Final addCenter");
-        return center;
+        return newCenter;
     }
 
     @PutMapping("/center/{id}")
-    public Center modifyCenter (@PathVariable long id, @RequestBody CenterDTO centerDto) throws CenterNotFoundException, CityNotFoundException {
+    public Center modifyCenter (@PathVariable long id, @RequestBody Center center) throws CenterNotFoundException {
         logger.info("Inicio modifyCenter");
-        Center center = centerService.modifyCenter(id, centerDto);
+        Center newCenter = centerService.modifyCenter(id, center);
         logger.info("Final modifyCenter");
-        return center;
+        return newCenter;
     }
 
     @DeleteMapping("/center/{id}")
-    public Center deleteCenter (@PathVariable long id) throws CenterNotFoundException, CityNotFoundException {
+    public Center deleteCenter (@PathVariable long id) throws CenterNotFoundException {
         logger.info("Inicio deleteCenter");
         Center center = centerService.deleteCenter(id);
         logger.info("Final deleteCenter");
-        return center;
-    }
-
-    @PatchMapping("/center/{id}")
-    public Center partialCenterModification(@PathVariable long id, @RequestBody Map<Object, Object> fields) throws CenterNotFoundException, CityNotFoundException {
-        logger.info("Inicio partialCenterModification");
-        Center center = centerService.partialCenterModification(id, fields);
-        logger.info("Final partialCenterModification");
         return center;
     }
 
@@ -87,13 +66,6 @@ public class CenterController {
     public ResponseEntity<ErrorResponse> handleCenterNotFoundException(CenterNotFoundException cenfe) {
         ErrorResponse errorResponse = new ErrorResponse("404", cenfe.getMessage());
         logger.error(cenfe.getMessage(), cenfe);
-        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
-    }
-
-    @ExceptionHandler(CityNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleCityNotFoundException(CityNotFoundException cinfe) {
-        ErrorResponse errorResponse = new ErrorResponse("404", cinfe.getMessage());
-        logger.error(cinfe.getMessage(), cinfe);
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
 }

@@ -23,19 +23,19 @@ public class Player {
     private String name;
     @Column
     private String surname;
-    @Column(name = "player_score")
-    private long playerScore;
-    @Column(name = "birth_date")
-    @JsonFormat(pattern = "dd-MM-yyyy")
-    private LocalDate birthDate;
+    @Column
+    private String level;
+    @Column
+    private boolean availability;
+    @Column
+    private byte[] image;
 
     @JoinTable(
-            name = "rel_players_teams",
-            joinColumns = @JoinColumn(name = "players_id"),
-            inverseJoinColumns = @JoinColumn(name = "team_id")
+            name = "rel_players_matches",
+            joinColumns = @JoinColumn(name = "player_id"),
+            inverseJoinColumns = @JoinColumn(name = "match_id")
     )
     @ManyToMany(cascade = CascadeType.ALL)
-    @JsonBackReference(value = "player_teams")
-    private List<Team> teams;
-
+    @JsonBackReference(value = "player_matches")
+    private List<Match> matches;
 }

@@ -1,10 +1,7 @@
 package com.martin.enjoypadelapi.controller;
 
 import com.martin.enjoypadelapi.domain.Player;
-import com.martin.enjoypadelapi.domain.Team;
 import com.martin.enjoypadelapi.exception.ErrorResponse;
-import com.martin.enjoypadelapi.exception.FullTeamException;
-import com.martin.enjoypadelapi.exception.TeamNotFoundException;
 import com.martin.enjoypadelapi.exception.PlayerNotFoundException;
 import com.martin.enjoypadelapi.service.PlayerService;
 import org.slf4j.Logger;
@@ -66,38 +63,6 @@ public class PlayerController {
         return player;
     }
 
-    @PatchMapping("/player/{id}")
-    public Player partialPlayerModification(@PathVariable long id, @RequestBody Map<Object, Object> fields) throws PlayerNotFoundException {
-        logger.info("Inicio partialPlayerModification");
-        Player player = playerService.partialPlayerModification(id, fields);
-        logger.info("Final partialPlayerModification");
-        return player;
-    }
-
-    @PostMapping("/team/{team_id}/player/{player_id}")
-    public Team addPlayerToTeam(@PathVariable long team_id, @PathVariable long player_id) throws PlayerNotFoundException, TeamNotFoundException, FullTeamException {
-        logger.info("Inicio addPlayerToTeam");
-        Team team = playerService.addPlayerToTeam(player_id, team_id);
-        logger.info("Final addPLayerToTeam");
-        return team;
-    }
-
-    @GetMapping("/player/{id}/teams")
-    public List<Team> listPlayerTeams(@PathVariable long id) throws PlayerNotFoundException {
-        logger.info("Inicio listPlayerTeams");
-        List<Team> teams = playerService.listPlayerTeams(id);
-        logger.info("final listPlayerTeams");
-        return teams;
-    }
-
-    @DeleteMapping("/team/{team_id}/player/{player_id}")
-    public Team deletePlayerToTeam(@PathVariable long team_id, @PathVariable long player_id) throws PlayerNotFoundException, TeamNotFoundException {
-        logger.info("Inicio deletePlayerToTeam");
-        Team team = playerService.deletePlayerToTeam(player_id, team_id);
-        logger.info("Final deletePlayerToTeam");
-        return team;
-    }
-
 
     @ExceptionHandler(PlayerNotFoundException.class)
     public ResponseEntity<ErrorResponse> handlePlayerNotFoundException(PlayerNotFoundException pnfe) {
@@ -106,17 +71,4 @@ public class PlayerController {
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(FullTeamException.class)
-    public ResponseEntity<ErrorResponse> handleFullTeamException (FullTeamException fte) {
-        ErrorResponse errorResponse = new ErrorResponse("400", fte.getMessage());
-        logger.error(fte.getMessage(), fte);
-        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(TeamNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleTeamNotFoundException(TeamNotFoundException tnfe) {
-        ErrorResponse errorResponse = new ErrorResponse("404", tnfe.getMessage());
-        logger.error(tnfe.getMessage(), tnfe);
-        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
-    }
 }

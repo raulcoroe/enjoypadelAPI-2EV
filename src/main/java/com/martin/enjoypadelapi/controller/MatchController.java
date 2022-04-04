@@ -1,13 +1,9 @@
 package com.martin.enjoypadelapi.controller;
 
 import com.martin.enjoypadelapi.domain.Match;
-import com.martin.enjoypadelapi.domain.Team;
-import com.martin.enjoypadelapi.domain.dto.MatchDTO;
-import com.martin.enjoypadelapi.exception.*;
 import com.martin.enjoypadelapi.exception.ErrorResponse;
 import com.martin.enjoypadelapi.exception.MatchNotFoundException;
 import com.martin.enjoypadelapi.service.MatchService;
-import com.martin.enjoypadelapi.exception.CourtNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
 public class MatchController {
@@ -43,27 +38,19 @@ public class MatchController {
     }
 
     @PostMapping("/matches")
-    public Match addMatch(@RequestBody MatchDTO matchDto) throws CourtNotFoundException {
+    public Match addMatch(@RequestBody Match match)  {
         logger.info("Inicio addMatch");
-        Match match = matchService.addMatch(matchDto);
+        Match newMatch = matchService.addMatch(match);
         logger.info("Final addMatch");
-        return match;
+        return newMatch;
     }
 
     @PutMapping("/match/{id}")
-    public Match modifyMatch(@PathVariable long id, @RequestBody MatchDTO matchDto) throws MatchNotFoundException, CourtNotFoundException {
+    public Match modifyMatch(@PathVariable long id, @RequestBody Match match) throws MatchNotFoundException {
         logger.info("Inicio modifyMatch");
-        Match match = matchService.modifyMatch(id, matchDto);
+        Match newMatch = matchService.modifyMatch(id, match);
         logger.info("Final modifyMatch");
-        return match;
-    }
-
-    @PatchMapping("/match/{id}")
-    public Match partialMatchModification(@PathVariable long id, @RequestBody Map<Object, Object> fields) throws MatchNotFoundException {
-        logger.info("Inicio partialMatchModification");
-        Match match = matchService.partialMatchModification(id, fields);
-        logger.info("Final partialMatchModification");
-        return match;
+        return newMatch;
     }
 
     @DeleteMapping("/match/{id}")
@@ -74,25 +61,11 @@ public class MatchController {
         return match;
     }
 
-    @GetMapping("/match/{id}/teams")
-    public List<Team> listMatchTeams(@PathVariable long id) throws MatchNotFoundException {
-        logger.info("Inicio listMatchTeams");
-        List<Team> teams = matchService.listMatchTeams(id);
-        logger.info("Final listMatchTeams");
-        return teams;
-    }
 
     @ExceptionHandler(MatchNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleMatchNotFoundException(MatchNotFoundException mnfe) {
         ErrorResponse errorResponse = new ErrorResponse("404", mnfe.getMessage());
         logger.error(mnfe.getMessage(), mnfe);
-        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
-    }
-
-    @ExceptionHandler(CourtNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleCourtNotFoundException(CourtNotFoundException cnfe) {
-        ErrorResponse errorResponse = new ErrorResponse("404", cnfe.getMessage());
-        logger.error(cnfe.getMessage(), cnfe);
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
 }

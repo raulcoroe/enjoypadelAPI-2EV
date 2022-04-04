@@ -20,24 +20,22 @@ public class Match {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    @Column(name = "start_time")
-    @JsonFormat(pattern = "HH:mm:ss")
-    private LocalTime startTime;
-    @Column(name = "end_time")
-    @JsonFormat(pattern = "HH:mm:ss")
-    private LocalTime endTime;
+    @Column
+    private String round;
+    @Column
+    private int duration;
     @Column
     @JsonFormat(pattern = "dd-MM-yyyy")
     private LocalDate date;
-    @Column(name = "match_score")
+    @Column
     private String matchScore;
 
     @ManyToMany(mappedBy = "matches")
-    private List<Team> teams;
+    private List<Player> players;
 
     @ManyToOne
-    @JoinColumn(name = "court_id")
-    private Court court;
+    @JoinColumn(name = "center_id")
+    private Center center;
 
 }
 
