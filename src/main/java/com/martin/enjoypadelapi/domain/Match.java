@@ -9,11 +9,12 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity(name = "matches")
 public class Match {
 
@@ -25,17 +26,15 @@ public class Match {
     @Column
     private int duration;
     @Column
-    @JsonFormat(pattern = "dd-MM-yyyy")
-    private LocalDate date;
+    private String date;
     @Column
     private String matchScore;
 
-    @ManyToMany(mappedBy = "matches")
+    @ManyToMany(mappedBy = "matches", cascade = CascadeType.ALL)
     private List<Player> players;
 
     @ManyToOne
     @JoinColumn(name = "center_id")
     private Center center;
-
 }
 

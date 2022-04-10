@@ -35,7 +35,7 @@ public class Player {
             joinColumns = @JoinColumn(name = "player_id"),
             inverseJoinColumns = @JoinColumn(name = "match_id")
     )
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany
     @JsonBackReference(value = "player_matches")
     private List<Match> matches;
 }

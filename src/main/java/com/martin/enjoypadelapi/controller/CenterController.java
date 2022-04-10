@@ -38,11 +38,10 @@ public class CenterController {
     }
 
     @PostMapping("/centers")
-    public Center addCenter (@RequestBody Center center) {
+    public void addCenter (@RequestBody Center center) {
         logger.info("Inicio addCenter");
-        Center newCenter = centerService.addCenter(center);
+        centerService.addCenter(center);
         logger.info("Final addCenter");
-        return newCenter;
     }
 
     @PutMapping("/center/{id}")

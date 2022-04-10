@@ -1,5 +1,6 @@
 package com.martin.enjoypadelapi.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -23,6 +24,7 @@ public class Center {
     private String latitude;
 
 
+    @JsonBackReference
     @OneToMany(mappedBy = "center")
     private List<Match> matches;
 }

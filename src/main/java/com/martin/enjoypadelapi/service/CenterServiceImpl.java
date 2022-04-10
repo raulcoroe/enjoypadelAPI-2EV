@@ -1,16 +1,13 @@
 package com.martin.enjoypadelapi.service;
 
 import com.martin.enjoypadelapi.domain.Center;
+import com.martin.enjoypadelapi.domain.Match;
 import com.martin.enjoypadelapi.exception.CenterNotFoundException;
 import com.martin.enjoypadelapi.repository.CenterRepository;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ReflectionUtils;
 
-import java.lang.reflect.Field;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class CenterServiceImpl implements CenterService {
@@ -33,15 +30,18 @@ public class CenterServiceImpl implements CenterService {
     }
 
     @Override
-    public Center addCenter (Center center) {
-        return centerRepository.save(center);
+    public void addCenter (Center center) {
+        centerRepository.save(center);
     }
 
     @Override
     public Center deleteCenter (long id) throws CenterNotFoundException {
         Center center = centerRepository.findById(id)
                 .orElseThrow(CenterNotFoundException::new);
-        centerRepository.delete(center);
+        for (Match match : center.getMatches()) {
+            match.setCenter(null);
+        }
+             centerRepository.delete(center);
         return center;
     }
 

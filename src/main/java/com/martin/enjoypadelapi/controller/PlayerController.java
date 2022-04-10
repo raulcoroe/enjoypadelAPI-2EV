@@ -23,9 +23,14 @@ public class PlayerController {
     private PlayerService playerService;
 
     @GetMapping("/players")
-    public List<Player> findAll() {
+    public List<Player> findAll(@RequestParam(name = "availability", defaultValue = "0") boolean availability) {
         logger.info("Inicio getPlayers");
-        List<Player> players = playerService.findAll();
+        List<Player> players;
+        if (availability) {
+             players = playerService.findAll(availability);
+        } else {
+            players = playerService.findAll();
+        }
         logger.info("Final getPlayers");
         return players;
     }
@@ -40,16 +45,17 @@ public class PlayerController {
     }
 
     @PostMapping("/players")
-    public Player addPlayer(@RequestBody Player newPlayer) {
+    public void addPlayer(@RequestBody Player newPlayer) {
         logger.info("Inicio addPlayer");
-        Player player = playerService.addPlayer(newPlayer);
+        newPlayer.setImage(null);
+        playerService.addPlayer(newPlayer);
         logger.info("Final addPlayer");
-        return player;
     }
 
     @PutMapping("/player/{id}")
     public Player modifyPlayer(@PathVariable long id, @RequestBody Player newPlayer) throws PlayerNotFoundException {
         logger.info("Inicio modifyPlayer");
+        newPlayer.setImage(null);
         Player player = playerService.modifyPlayer(id, newPlayer);
         logger.info("Final modifyPlayer");
         return player;

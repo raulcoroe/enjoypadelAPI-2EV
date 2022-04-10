@@ -3,14 +3,10 @@ package com.martin.enjoypadelapi.service;
 import com.martin.enjoypadelapi.domain.Player;
 import com.martin.enjoypadelapi.exception.PlayerNotFoundException;
 import com.martin.enjoypadelapi.repository.PlayerRepository;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ReflectionUtils;
 
-import java.lang.reflect.Field;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class PlayerServiceImpl implements PlayerService {
@@ -32,9 +28,8 @@ public class PlayerServiceImpl implements PlayerService {
     }
 
     @Override
-    public Player addPlayer(Player newPlayer) {
-        Player player = playerRepository.save(newPlayer);
-        return player;
+    public void addPlayer(Player newPlayer) {
+        playerRepository.save(newPlayer);
     }
 
     @Override
@@ -51,5 +46,10 @@ public class PlayerServiceImpl implements PlayerService {
                 .orElseThrow(PlayerNotFoundException::new);
         newPlayer.setId(id);
         return playerRepository.save(newPlayer);
+    }
+
+    @Override
+    public List<Player> findAll(boolean availability) {
+        return playerRepository.findAll(availability);
     }
 }

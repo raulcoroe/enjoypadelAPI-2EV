@@ -1,8 +1,11 @@
 package com.martin.enjoypadelapi.controller;
 
 import com.martin.enjoypadelapi.domain.Match;
+import com.martin.enjoypadelapi.domain.dto.MatchDTO;
+import com.martin.enjoypadelapi.exception.CenterNotFoundException;
 import com.martin.enjoypadelapi.exception.ErrorResponse;
 import com.martin.enjoypadelapi.exception.MatchNotFoundException;
+import com.martin.enjoypadelapi.exception.PlayerNotFoundException;
 import com.martin.enjoypadelapi.service.MatchService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,7 +15,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
 @RestController
 public class MatchController {
 
@@ -38,27 +40,25 @@ public class MatchController {
     }
 
     @PostMapping("/matches")
-    public Match addMatch(@RequestBody Match match)  {
+    public void addMatch(@RequestBody MatchDTO matchDto) throws PlayerNotFoundException, CenterNotFoundException {
         logger.info("Inicio addMatch");
-        Match newMatch = matchService.addMatch(match);
+        matchService.addMatch(matchDto);
         logger.info("Final addMatch");
-        return newMatch;
     }
 
     @PutMapping("/match/{id}")
-    public Match modifyMatch(@PathVariable long id, @RequestBody Match match) throws MatchNotFoundException {
+    public Match modifyMatch(@PathVariable long id, @RequestBody MatchDTO matchDto) throws MatchNotFoundException, PlayerNotFoundException, CenterNotFoundException {
         logger.info("Inicio modifyMatch");
-        Match newMatch = matchService.modifyMatch(id, match);
+        Match newMatch = matchService.modifyMatch(id, matchDto);
         logger.info("Final modifyMatch");
         return newMatch;
     }
 
     @DeleteMapping("/match/{id}")
-    public Match deleteMatch(@PathVariable long id)throws MatchNotFoundException {
+    public void deleteMatch(@PathVariable long id)throws MatchNotFoundException {
         logger.info("Inicio deleteMatch");
-        Match match = matchService.deleteMatch(id);
+        matchService.deleteMatch(id);
         logger.info("Final deleteMatch");
-        return match;
     }
 
 
@@ -66,6 +66,20 @@ public class MatchController {
     public ResponseEntity<ErrorResponse> handleMatchNotFoundException(MatchNotFoundException mnfe) {
         ErrorResponse errorResponse = new ErrorResponse("404", mnfe.getMessage());
         logger.error(mnfe.getMessage(), mnfe);
+        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(PlayerNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handlePlayerNotFoundException(PlayerNotFoundException pnfe) {
+        ErrorResponse errorResponse = new ErrorResponse("404", pnfe.getMessage());
+        logger.error(pnfe.getMessage(), pnfe);
+        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(CenterNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleCenterNotFoundException(CenterNotFoundException cenfe) {
+        ErrorResponse errorResponse = new ErrorResponse("404", cenfe.getMessage());
+        logger.error(cenfe.getMessage(), cenfe);
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
 }
