@@ -9,8 +9,8 @@ import java.util.Map;
 public interface CenterService {
     List<Center> findAll();
     Center findById(long id) throws CenterNotFoundException;
-    void addCenter(Center center);
-    Center deleteCenter(long id) throws CenterNotFoundException;
+    Center addCenter(Center center);
+    void deleteCenter(long id) throws CenterNotFoundException;
     Center modifyCenter(long id, Center newCenter) throws CenterNotFoundException;
     Center partialCenterModification(long id, Map<Object, Object> fields) throws CenterNotFoundException;
 

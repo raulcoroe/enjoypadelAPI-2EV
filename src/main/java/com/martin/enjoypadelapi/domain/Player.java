@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 import org.springframework.context.annotation.Import;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -21,6 +23,8 @@ public class Player {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     @Column
+    @NotNull
+    @NotBlank
     private String name;
     @Column
     private String surname;

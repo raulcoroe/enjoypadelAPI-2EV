@@ -9,8 +9,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -23,7 +28,7 @@ public class PlayerController {
     private PlayerService playerService;
 
     @GetMapping("/players")
-    public List<Player> findAll(@RequestParam(name = "availability", defaultValue = "0") boolean availability) {
+    public ResponseEntity<List<Player>> findAll(@RequestParam(name = "availability", defaultValue = "0") boolean availability) {
         logger.info("Inicio getPlayers");
         List<Player> players;
         if (availability) {
@@ -32,47 +37,47 @@ public class PlayerController {
             players = playerService.findAll();
         }
         logger.info("Final getPlayers");
-        return players;
+        return new ResponseEntity<>(players, HttpStatus.OK);
     }
 
-
     @GetMapping("/player/{id}")
-    public Player findById(@PathVariable long id) throws PlayerNotFoundException {
+    public ResponseEntity<Player> findById(@PathVariable long id) throws PlayerNotFoundException {
         logger.info("Inicio findById");
         Player player = playerService.findById(id);
         logger.info("Final findById");
-        return player;
+        return new ResponseEntity<>(player, HttpStatus.OK);
     }
 
     @PostMapping("/players")
-    public void addPlayer(@RequestBody Player newPlayer) {
+    public ResponseEntity<Player> addPlayer(@Valid @RequestBody Player newPlayer) {
         logger.info("Inicio addPlayer");
-        playerService.addPlayer(newPlayer);
+        Player player = playerService.addPlayer(newPlayer);
         logger.info("Final addPlayer");
+        return new ResponseEntity<>(player, HttpStatus.CREATED);
     }
 
     @PutMapping("/player/{id}")
-    public Player modifyPlayer(@PathVariable long id, @RequestBody Player newPlayer) throws PlayerNotFoundException {
+    public ResponseEntity<Player> modifyPlayer(@PathVariable long id, @Valid @RequestBody Player newPlayer) throws PlayerNotFoundException {
         logger.info("Inicio modifyPlayer");
         Player player = playerService.modifyPlayer(id, newPlayer);
         logger.info("Final modifyPlayer");
-        return player;
+        return new ResponseEntity<>(player, HttpStatus.OK);
     }
 
     @DeleteMapping("/player/{id}")
-    public Player deletePlayer(@PathVariable long id) throws PlayerNotFoundException {
+    public ResponseEntity<Void> deletePlayer(@PathVariable long id) throws PlayerNotFoundException {
         logger.info("Inicio deletePlayer");
-        Player player = playerService.deletePlayer(id);
+        playerService.deletePlayer(id);
         logger.info("Final deletePlayer");
-        return player;
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @PatchMapping("/player/{id}")
-    public Player partialPlayerModification(@PathVariable long id, @RequestBody Map<Object, Object> fields) throws PlayerNotFoundException {
+    public ResponseEntity<Player> partialPlayerModification(@PathVariable long id, @Valid @RequestBody Map<Object, Object> fields) throws PlayerNotFoundException {
         logger.info("Inicio partialPlayerModification");
         Player player = playerService.partialPlayerModification(id, fields);
         logger.info("Final partialPlayerModification");
-        return player;
+        return new ResponseEntity<>(player, HttpStatus.OK);
     }
 
 
@@ -83,4 +88,23 @@ public class PlayerController {
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler
+    public ResponseEntity<ErrorResponse> handleException(Exception exception) {
+        ErrorResponse errorResponse = new ErrorResponse("3", "Internal server error");
+        logger.error(exception.getMessage(), exception);
+        return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public Map<String, String> handleValidationExceptions(
+            MethodArgumentNotValidException ex) {
+        Map<String, String> errors = new HashMap<>();
+        ex.getBindingResult().getAllErrors().forEach((error) -> {
+            String fieldName = ((FieldError) error).getField();
+            String errorMessage = error.getDefaultMessage();
+            errors.put(fieldName, errorMessage);
+        });
+        return errors;
+    }
 }

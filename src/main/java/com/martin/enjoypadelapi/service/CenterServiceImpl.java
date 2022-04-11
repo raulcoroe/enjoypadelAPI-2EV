@@ -28,24 +28,23 @@ public class CenterServiceImpl implements CenterService {
     @Override
     public Center findById(long id) throws CenterNotFoundException {
         Center center = centerRepository.findById(id)
-                .orElseThrow(()-> new CenterNotFoundException());
+                .orElseThrow(() -> new CenterNotFoundException());
         return center;
     }
 
     @Override
-    public void addCenter (Center center) {
-        centerRepository.save(center);
+    public Center addCenter(Center center) {
+        return centerRepository.save(center);
     }
 
     @Override
-    public Center deleteCenter (long id) throws CenterNotFoundException {
+    public void deleteCenter(long id) throws CenterNotFoundException {
         Center center = centerRepository.findById(id)
                 .orElseThrow(CenterNotFoundException::new);
         for (Match match : center.getMatches()) {
             match.setCenter(null);
         }
-             centerRepository.delete(center);
-        return center;
+        centerRepository.delete(center);
     }
 
     @Override
@@ -60,7 +59,7 @@ public class CenterServiceImpl implements CenterService {
     @Override
     public Center partialCenterModification(long id, Map<Object, Object> fields) throws CenterNotFoundException {
         Center center = centerRepository.findById(id)
-                .orElseThrow(()-> new CenterNotFoundException());
+                .orElseThrow(() -> new CenterNotFoundException());
 
         fields.forEach((k, v) -> {
             Field field = ReflectionUtils.findField(Center.class, (String) k);

@@ -45,7 +45,7 @@ public class MatchServiceImpl implements MatchService {
     }
 
     @Override
-    public void addMatch(MatchDTO matchDTO) throws PlayerNotFoundException, CenterNotFoundException {
+    public Match addMatch(MatchDTO matchDTO) throws PlayerNotFoundException, CenterNotFoundException {
         ModelMapper mapper = new ModelMapper();
         Match match = mapper.map(matchDTO, Match.class);
 
@@ -60,7 +60,7 @@ public class MatchServiceImpl implements MatchService {
         player3.getMatches().add(match);
         player4.getMatches().add(match);
         match.setCenter(center);
-        matchRepository.save(match);
+        return matchRepository.save(match);
     }
 
     @Override

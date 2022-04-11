@@ -12,7 +12,7 @@ import java.util.Map;
 public interface MatchService {
     List<Match> findAll();
     Match findById(long id) throws MatchNotFoundException;
-    void addMatch(MatchDTO matchDTO) throws PlayerNotFoundException, CenterNotFoundException;
+    Match addMatch(MatchDTO matchDTO) throws PlayerNotFoundException, CenterNotFoundException;
     void deleteMatch(long id) throws MatchNotFoundException;
     Match modifyMatch(long id, MatchDTO matchDTO) throws MatchNotFoundException, PlayerNotFoundException, CenterNotFoundException;
     Match partialMatchModification(long id, Map<Object, Object> fields) throws MatchNotFoundException;
