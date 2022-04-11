@@ -6,9 +6,12 @@ import com.martin.enjoypadelapi.repository.PlayerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Base64Utils;
+import org.springframework.util.ReflectionUtils;
 
+import java.lang.reflect.Field;
 import java.util.Base64;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class PlayerServiceImpl implements PlayerService {
@@ -54,6 +57,18 @@ public class PlayerServiceImpl implements PlayerService {
         return playerRepository.save(newPlayer);
     }
 
+    @Override
+    public Player partialPlayerModification(long id, Map<Object, Object> fields) throws PlayerNotFoundException {
+        Player player = playerRepository.findById(id)
+                .orElseThrow(() -> new PlayerNotFoundException());
+        fields.forEach((k, v) -> {
+            Field field = ReflectionUtils.findField(Player.class, (String) k);
+            field.setAccessible(true);
+            ReflectionUtils.setField(field, player, v);
+        });
+        Player playerModified = modifyPlayer(id, player);
+        return playerModified;
+    }
     @Override
     public List<Player> findAll(boolean availability) {
         return playerRepository.findAll(availability);

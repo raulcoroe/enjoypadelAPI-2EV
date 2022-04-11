@@ -15,6 +15,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
+
 @RestController
 public class MatchController {
 
@@ -52,6 +54,14 @@ public class MatchController {
         Match newMatch = matchService.modifyMatch(id, matchDto);
         logger.info("Final modifyMatch");
         return newMatch;
+    }
+
+    @PatchMapping("/match/{id}")
+    public Match partialMatchModification(@PathVariable long id, @RequestBody Map<Object, Object> fields) throws MatchNotFoundException {
+        logger.info("Inicio partialMatchModification");
+        Match match = matchService.partialMatchModification(id, fields);
+        logger.info("Final partialMatchModification");
+        return match;
     }
 
     @DeleteMapping("/match/{id}")

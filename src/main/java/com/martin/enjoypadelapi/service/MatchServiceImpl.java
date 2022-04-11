@@ -13,8 +13,11 @@ import com.martin.enjoypadelapi.repository.PlayerRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ReflectionUtils;
 
+import java.lang.reflect.Field;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class MatchServiceImpl implements MatchService {
@@ -87,5 +90,18 @@ public class MatchServiceImpl implements MatchService {
         match.setId(id);
         matchRepository.save(match);
         return match;
+    }
+
+    @Override
+    public Match partialMatchModification(long id, Map<Object, Object> fields) throws MatchNotFoundException {
+        Match match = matchRepository.findById(id)
+                .orElseThrow(()-> new MatchNotFoundException());
+        fields.forEach((k, v) -> {
+            Field field = ReflectionUtils.findField(Match.class, (String) k);
+            field.setAccessible(true);
+            ReflectionUtils.setField(field, match, v);
+        });
+        Match matchModified = matchRepository.save(match);
+        return matchModified;
     }
 }

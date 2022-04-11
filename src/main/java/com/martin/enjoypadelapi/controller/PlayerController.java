@@ -67,6 +67,14 @@ public class PlayerController {
         return player;
     }
 
+    @PatchMapping("/player/{id}")
+    public Player partialPlayerModification(@PathVariable long id, @RequestBody Map<Object, Object> fields) throws PlayerNotFoundException {
+        logger.info("Inicio partialPlayerModification");
+        Player player = playerService.partialPlayerModification(id, fields);
+        logger.info("Final partialPlayerModification");
+        return player;
+    }
+
 
     @ExceptionHandler(PlayerNotFoundException.class)
     public ResponseEntity<ErrorResponse> handlePlayerNotFoundException(PlayerNotFoundException pnfe) {

@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 public class CenterController {
@@ -57,6 +58,14 @@ public class CenterController {
         logger.info("Inicio deleteCenter");
         Center center = centerService.deleteCenter(id);
         logger.info("Final deleteCenter");
+        return center;
+    }
+
+    @PatchMapping("/center/{id}")
+    public Center partialCenterModification(@PathVariable long id, @RequestBody Map<Object, Object> fields) throws CenterNotFoundException {
+        logger.info("Inicio partialCenterModification");
+        Center center = centerService.partialCenterModification(id, fields);
+        logger.info("Final partialCenterModification");
         return center;
     }
 

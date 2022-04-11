@@ -7,6 +7,7 @@ import com.martin.enjoypadelapi.exception.MatchNotFoundException;
 import com.martin.enjoypadelapi.exception.PlayerNotFoundException;
 
 import java.util.List;
+import java.util.Map;
 
 public interface MatchService {
     List<Match> findAll();
@@ -14,4 +15,5 @@ public interface MatchService {
     void addMatch(MatchDTO matchDTO) throws PlayerNotFoundException, CenterNotFoundException;
     void deleteMatch(long id) throws MatchNotFoundException;
     Match modifyMatch(long id, MatchDTO matchDTO) throws MatchNotFoundException, PlayerNotFoundException, CenterNotFoundException;
+    Match partialMatchModification(long id, Map<Object, Object> fields) throws MatchNotFoundException;
 }
