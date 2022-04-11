@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.context.annotation.Import;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -28,6 +29,7 @@ public class Player {
     @Column
     private boolean availability;
     @Column
+    @Lob
     private byte[] image;
 
     @JoinTable(

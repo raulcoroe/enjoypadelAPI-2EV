@@ -5,7 +5,9 @@ import com.martin.enjoypadelapi.exception.PlayerNotFoundException;
 import com.martin.enjoypadelapi.repository.PlayerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Base64Utils;
 
+import java.util.Base64;
 import java.util.List;
 
 @Service
@@ -29,6 +31,8 @@ public class PlayerServiceImpl implements PlayerService {
 
     @Override
     public void addPlayer(Player newPlayer) {
+        byte[] encoded = Base64Utils.encode(newPlayer.getImage());
+        newPlayer.setImage(null);
         playerRepository.save(newPlayer);
     }
 
@@ -37,6 +41,7 @@ public class PlayerServiceImpl implements PlayerService {
         Player player = playerRepository.findById(id)
                 .orElseThrow(PlayerNotFoundException::new);
         playerRepository.delete(player);
+
         return player;
     }
 
@@ -45,6 +50,7 @@ public class PlayerServiceImpl implements PlayerService {
         playerRepository.findById(id)
                 .orElseThrow(PlayerNotFoundException::new);
         newPlayer.setId(id);
+        newPlayer.setImage(null);
         return playerRepository.save(newPlayer);
     }
 
