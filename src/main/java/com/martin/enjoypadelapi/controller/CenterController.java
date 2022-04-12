@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -80,6 +81,7 @@ public class CenterController {
     public ResponseEntity<ErrorResponse> handleCenterNotFoundException(CenterNotFoundException cenfe) {
         ErrorResponse errorResponse = new ErrorResponse("404", cenfe.getMessage());
         logger.error(cenfe.getMessage(), cenfe);
+        logger.error(Arrays.toString(cenfe.getStackTrace()));
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
 
@@ -87,6 +89,7 @@ public class CenterController {
     public ResponseEntity<ErrorResponse> handleException(Exception exception) {
         ErrorResponse errorResponse = new ErrorResponse("3", "Internal server error");
         logger.error(exception.getMessage(), exception);
+        logger.error(Arrays.toString(exception.getStackTrace()));
         return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
@@ -100,6 +103,8 @@ public class CenterController {
             String errorMessage = error.getDefaultMessage();
             errors.put(fieldName, errorMessage);
         });
+        logger.error(ex.getMessage(), ex);
+        logger.error(Arrays.toString(ex.getStackTrace()));
         return errors;
     }
 }

@@ -85,6 +85,7 @@ public class PlayerController {
     public ResponseEntity<ErrorResponse> handlePlayerNotFoundException(PlayerNotFoundException pnfe) {
         ErrorResponse errorResponse = new ErrorResponse("404", pnfe.getMessage());
         logger.error(pnfe.getMessage(), pnfe);
+        logger.error(Arrays.toString(pnfe.getStackTrace()));
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
 
@@ -92,6 +93,7 @@ public class PlayerController {
     public ResponseEntity<ErrorResponse> handleException(Exception exception) {
         ErrorResponse errorResponse = new ErrorResponse("3", "Internal server error");
         logger.error(exception.getMessage(), exception);
+        logger.error(Arrays.toString(exception.getStackTrace()));
         return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
@@ -105,6 +107,8 @@ public class PlayerController {
             String errorMessage = error.getDefaultMessage();
             errors.put(fieldName, errorMessage);
         });
+        logger.error(ex.getMessage(), ex);
+        logger.error(Arrays.toString(ex.getStackTrace()));
         return errors;
     }
 }
