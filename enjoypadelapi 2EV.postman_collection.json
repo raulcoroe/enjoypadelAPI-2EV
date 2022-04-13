@@ -1,0 +1,622 @@
+{
+	"info": {
+		"_postman_id": "36972ace-12a0-4450-809d-dbeeb1ca53ce",
+		"name": "enjoypadelapi 2EV",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "players",
+			"item": [
+				{
+					"name": "Listado de jugadores",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/players?availability=false",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"players"
+							],
+							"query": [
+								{
+									"key": "availability",
+									"value": "false",
+									"description": "Disponibilidad de los jugadores"
+								}
+							]
+						},
+						"description": "Devuelve el listado de los jugadores registrados en la aplicación. Es posible devolver filtrar por los jugadores disponibles."
+					},
+					"response": []
+				},
+				{
+					"name": "Añade un jugador",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Raul\",\n  \"surname\": \"Martin\",\n  \"level\": \"Alto\",\n  \"available\": true,\n  \"image\": null\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/players",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"players"
+							]
+						},
+						"description": "Añade jugadores a la aplicación"
+					},
+					"response": []
+				},
+				{
+					"name": "Devuelve un jugador",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/player/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"player",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1",
+									"description": "(Required) "
+								}
+							]
+						},
+						"description": "Devuelve el un jugador mediante su ID"
+					},
+					"response": []
+				},
+				{
+					"name": "Modifica un jugador",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Raul\",\n  \"surname\": \"Martin\",\n  \"level\": \"Alto\",\n  \"available\": true,\n  \"image\": null\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/player/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"player",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1",
+									"description": "(Required) "
+								}
+							]
+						},
+						"description": "Modifica un jugador mediante su ID"
+					},
+					"response": []
+				},
+				{
+					"name": "Modifica parcialmente un jugador",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Raul\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/player/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"player",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1",
+									"description": "(Required) "
+								}
+							]
+						},
+						"description": "Modifica parcialmente un jugador registrado"
+					},
+					"response": []
+				},
+				{
+					"name": "Elimina un jugador",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/player/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"player",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1",
+									"description": "(Required) "
+								}
+							]
+						},
+						"description": "Elimina un jugador mediante su ID"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "matches",
+			"item": [
+				{
+					"name": "Listado de partidos",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/matches",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"matches"
+							]
+						},
+						"description": "Devuelve el listado de los partidos registrados en la aplicación"
+					},
+					"response": []
+				},
+				{
+					"name": "Añade un partido",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"round\": \"Ronda 1\",\n  \"duration\": 60,\n  \"date\": \"12/04/2022\",\n  \"matchScore\": \"6-2, 6-4\",\n  \"player1\": 1,\n  \"player2\": 1,\n  \"player3\": 1,\n  \"player4\": 1,\n  \"center\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/matches",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"matches"
+							]
+						},
+						"description": "Registra un partido en la aplicaicón a partir de un DTO"
+					},
+					"response": []
+				},
+				{
+					"name": "Devuelve un partido",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/match/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"match",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1",
+									"description": "(Required) "
+								}
+							]
+						},
+						"description": "Devuelve un partido mediante su ID"
+					},
+					"response": []
+				},
+				{
+					"name": "Modifica parcialmente un partido",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"round\": \"Ronda 1\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/match/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"match",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1",
+									"description": "(Required) "
+								}
+							]
+						},
+						"description": "Modifica parcialmente un partido registrado"
+					},
+					"response": []
+				},
+				{
+					"name": "Elimina un partido",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/match/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"match",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1",
+									"description": "(Required) "
+								}
+							]
+						},
+						"description": "Elimina un partido mediante su ID"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "centers",
+			"item": [
+				{
+					"name": "Listado de centros",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/centers",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"centers"
+							]
+						},
+						"description": "Devuelve el listado de los centros registrados en la aplicación"
+					},
+					"response": []
+				},
+				{
+					"name": "Añade un centro",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"disabled": true
+							},
+							{
+								"key": "Accept",
+								"value": "aplication/json",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\n    \"name\": \"Centro2\",\n    \"longitude\": \"-6.200284883379936\",\n    \"latitude\": \"37.71861949888293\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/centers",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"centers"
+							]
+						},
+						"description": "Añade un centro mediante su ID"
+					},
+					"response": []
+				},
+				{
+					"name": "Devuelve un centro",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/center/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"center",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1",
+									"description": "(Required) "
+								}
+							]
+						},
+						"description": "Devuelve un centro mediante su ID"
+					},
+					"response": []
+				},
+				{
+					"name": "Modifica un centro",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Padel Club\",\n  \"longitude\": -0.545665156846654,\n  \"latitude\": -0.3242146515684665\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/center/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"center",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1",
+									"description": "(Required) "
+								}
+							]
+						},
+						"description": "Modifica un centro mediante su ID"
+					},
+					"response": []
+				},
+				{
+					"name": "Modifica parcialmente un centro",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Padel Club\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/center/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"center",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1",
+									"description": "(Required) "
+								}
+							]
+						},
+						"description": "Modifica parcialmente un centro registrado"
+					},
+					"response": []
+				},
+				{
+					"name": "Elimina un centro",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/center/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"center",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1",
+									"description": "(Required) "
+								}
+							]
+						},
+						"description": "Elimina un centro mediante su ID"
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:8080"
+		}
+	]
+}

@@ -1,0 +1,998 @@
+
+openapi: 3.0.1
+info:
+  title: OpenAPI definition
+  description: Aplicación que permite gestionar partidos de padel
+  version: v1.0
+servers:
+  - url: http://localhost:8080
+tags:
+  - name: players
+    description: Operaciones para realizar con jugadores
+  - name: matches
+    description: Operaciones para realizar con partidos
+  - name: centers
+    description: Operaciones para realizar con centros deportivos
+paths:
+  /players:
+    get:
+      tags:
+        - players
+      summary: Listado de jugadores
+      description: Devuelve el listado de los jugadores registrados en la aplicación. Es posible devolver filtrar por los jugadores disponibles.
+      operationId: findAll
+      parameters:
+        - name: availability
+          in: query
+          description: Disponibilidad de los jugadores
+          required: false
+          schema:
+            type: boolean
+            default: false
+          examples:
+            ejemplo1:
+              value: false
+            ejemplo2:
+              value: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Player'
+        '500':
+          description: Error interno del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+
+    post:
+      tags:
+        - players
+      operationId: addPlayer
+      summary: Añade un jugador
+      description: Añade jugadores a la aplicación
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PlayerSchema'
+            examples:
+              Ejemplo1:
+                value:
+                  name: Raul
+                  surname: Martin
+                  level: Alto
+                  available: true
+                  image: null
+              Ejemplo2:
+                value:
+                  name: Manuel
+                  surname: Hernandez
+                  level: Bajo
+                  available: false
+                  image: null
+        required: true
+      responses:
+        '201':
+          description: Jugador creado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Player'
+        '400':
+          description: Faltan campos obligatorios o hay error en el formato de entrada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '500':
+          description: Error interno del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+          
+  /player/{id}:
+    get:
+      tags:
+        - players
+      summary: Devuelve un jugador
+      description: Devuelve el un jugador mediante su ID
+      operationId: findById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+          examples:
+            Ejemplo1:
+              value: 1
+            Ejemplo2:
+              value: 33
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Player'
+        '404':
+          description: No se ha encontrado el jugador
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceNotFound'
+              example:
+                internalError: 1
+                message: "No se ha podido encontrar el jugador"
+        '500':
+          description: Error interno del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+    put:
+      tags:
+        - players
+      summary: Modifica un jugador
+      description: Modifica un jugador mediante su ID
+      operationId: modifyPlayer
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+          examples:
+            Ejemplo1:
+              value: 1
+            Ejemplo2:
+              value: 33
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Player'
+            examples:
+              Ejemplo1:
+                value:
+                  name: Raul
+                  surname: Martin
+                  level: Alto
+                  available: true
+                  image: null
+              Ejemplo2:
+                value:
+                  name: Manuel
+                  surname: Hernandez
+                  level: Bajo
+                  available: false
+                  image: null
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Player'
+        '400':
+          description: Faltan campos obligatorios o hay error en el formato de entrada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '404':
+          description: No se ha encontrado el jugador
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceNotFound'
+              example:
+                internalError: 1
+                message: "No se ha podido encontrar el jugador"
+        '500':
+          description: Error interno del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+    patch:
+      tags:
+        - players
+      summary: Modifica parcialmente un jugador
+      description: Modifica parcialmente un jugador registrado
+      operationId: patchPlayer
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+          examples:
+            Ejemplo1:
+              value: 1
+            Ejemplo2:
+              value: 33
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PlayerSchema'
+            examples:
+              Ejemplo1:
+                value:
+                  name: Raul
+              Ejemplo2:
+                value:
+                  name: Manuel
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Player'
+        '400':
+          description: Faltan campos obligatorios o hay error en el formato de entrada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '404':
+          description: No se ha encontrado el jugador
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceNotFound'
+              example:
+                internalError: 1
+                message: "No se ha podido encontrar el jugador"
+        '500':
+          description: Error interno del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+    delete:
+      tags:
+        - players
+      operationId: deletePlayer
+      summary: Elimina un jugador
+      description: Elimina un jugador mediante su ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+          examples:
+            Ejemplo1:
+              value: 1
+            Ejemplo2:
+              value: 33
+      responses:
+        '204':
+          description: Eliminado
+        '404':
+          description: No se ha encontrado el jugador
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceNotFound'
+              example:
+                internalError: 1
+                message: "No se ha podido encontrar el jugador"
+        '500':
+          description: Error interno del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+        
+          
+  /matches:
+    get:
+      tags:
+        - matches
+      operationId: findAll_1
+      summary: Listado de partidos
+      description: Devuelve el listado de los partidos registrados en la aplicación
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Match'
+        '500':
+          description: Error interno del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+    post:
+      tags:
+        - matches
+      operationId: addMatch
+      summary: Añade un partido
+      description: Registra un partido en la aplicaicón a partir de un DTO
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MatchDTO'
+            examples:
+              Ejemplo1:
+                value:
+                  round: Ronda 1
+                  duration: 60
+                  date: 12/04/2022
+                  matchScore: 6-2, 6-4
+                  player1: 1
+                  player2: 1
+                  player3: 1
+                  player4: 1
+                  center: 1
+              Ejemplo2:
+                value:
+                  round: Ronda 50
+                  duration: 120
+                  date: 19/04/2022
+                  matchScore: 6-1, 7-6
+                  player1: 33
+                  player2: 33
+                  player3: 33
+                  player4: 33
+                  center: 33
+        required: true
+      responses:
+        '201':
+          description: Partido creado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Match'
+        '400':
+          description: Faltan campos obligatorios o hay error en el formato de entrada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '500':
+          description: Error interno del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+                
+  /match/{id}:
+    get:
+      tags:
+        - matches
+      operationId: findById_1
+      summary: Devuelve un partido
+      description: Devuelve un partido mediante su ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+          examples:
+            Ejemplo1:
+              value: 1
+            Ejemplo2:
+              value: 33
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Match'
+        '404':
+          description: No se ha encontrado el partido
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceNotFound'
+              example:
+                internalError: 1
+                message: "No se ha podido encontrar el partido"
+        '500':
+          description: Error interno del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+    put:
+      tags:
+        - matches
+      operationId: modifyMatch
+      summary: Modifica un partido
+      description: Modifica un partido mediante su ID e introduciendo un DTO
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+          examples:
+            Ejemplo1:
+              value: 1
+            Ejemplo2:
+              value: 33
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MatchDTO'
+            examples:
+              Ejemplo1:
+                value:
+                  round: Ronda 1
+                  duration: 60
+                  date: 12/04/2022
+                  matchScore: 6-2, 6-4
+                  player1: 1
+                  player2: 1
+                  player3: 1
+                  player4: 1
+                  center: 1
+              Ejemplo2:
+                value:
+                  round: Ronda 50
+                  duration: 120
+                  date: 19/04/2022
+                  matchScore: 6-1, 7-6
+                  player1: 33
+                  player2: 33
+                  player3: 33
+                  player4: 33
+                  center: 33
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Match'
+        '400':
+          description: Faltan campos obligatorios o hay error en el formato de entrada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '404':
+          description: No se ha encontrado el partido
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceNotFound'
+              example:
+                internalError: 1
+                message: "No se ha podido encontrar el partido"
+        '500':
+          description: Error interno del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+    patch:
+      tags:
+        - matches
+      summary: Modifica parcialmente un partido
+      description: Modifica parcialmente un partido registrado
+      operationId: patchMatch
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+          examples:
+            Ejemplo1:
+              value: 1
+            Ejemplo2:
+              value: 33
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MatchDTO'
+            examples:
+              Ejemplo1:
+                value:
+                  round: Ronda 1
+              Ejemplo2:
+                value:
+                  round: Ronda 50
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Match'
+        '400':
+          description: Faltan campos obligatorios o hay error en el formato de entrada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '404':
+          description: No se ha encontrado el jugador
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceNotFound'
+              example:
+                internalError: 1
+                message: "No se ha podido encontrar el jugador"
+        '500':
+          description: Error interno del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+    delete:
+      tags:
+        - matches
+      operationId: deleteMatch
+      summary: Elimina un partido
+      description: Elimina un partido mediante su ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+          examples:
+            Ejemplo1:
+              value: 1
+            Ejemplo2:
+              value: 33
+      responses:
+        '204':
+          description: Partido eliminado
+        '404':
+          description: No se ha encontrado el partido
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceNotFound'
+              example:
+                internalError: 1
+                message: "No se ha podido encontrar el partido"
+        '500':
+          description: Error interno del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+          
+          
+  /centers:
+    get:
+      tags:
+        - centers
+      operationId: findAll_2
+      summary: Listado de centros
+      description: Devuelve el listado de los centros registrados en la aplicación
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Center'
+        '500':
+          description: Error interno del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+    post:
+      tags:
+        - centers
+      operationId: addCenter
+      summary: Añade un centro
+      description: Añade un centro mediante su ID
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CenterSchema'
+            examples:
+              Ejemplo1:
+                value:
+                  name: Padel Club
+                  longitude: -0.545665156846654
+                  latitude: -0.3242146515684665
+              Ejemplo2:
+                value:
+                  name: Sport Center padelmania
+                  longitude: -0.54563422346654
+                  latitude: -0.32423423415684665
+        required: true
+      responses:
+        '201':
+          description: Centro deportivo creado
+          content:
+            aplication/json:
+              schema:
+                $ref: '#/components/schemas/Center'
+        '400':
+          description: Faltan campos obligatorios o hay error en el formato de entrada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '500':
+          description: Error interno del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+          
+  /center/{id}:
+    get:
+      tags:
+        - centers
+      operationId: findById_2
+      summary: Devuelve un centro
+      description: Devuelve un centro mediante su ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+          examples:
+            Ejemplo1:
+              value: 1
+            Ejemplo2:
+              value: 33
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Center'
+        '404':
+          description: No se ha encontrado el centro deportivo
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceNotFound'
+              example:
+                internalError: 1
+                message: "No se ha podido encontrar el centro deportivo"
+        '500':
+          description: Error interno del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+    put:
+      tags:
+        - centers
+      operationId: modifyCenter
+      summary: Modifica un centro
+      description: Modifica un centro mediante su ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+          examples:
+            Ejemplo1:
+              value: 1
+            Ejemplo2:
+              value: 33
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CenterSchema'
+            examples:
+              Ejemplo1:
+                value:
+                  name: Padel Club
+                  longitude: -0.545665156846654
+                  latitude: -0.3242146515684665
+              Ejemplo2:
+                value:
+                  name: Sport Center padelmania
+                  longitude: -0.54563422346654
+                  latitude: -0.32423423415684665
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Center'
+        '400':
+          description: Faltan campos obligatorios o hay error en el formato de entrada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '404':
+          description: No se ha encontrado el centro deportivo
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceNotFound'
+              example:
+                internalError: 1
+                message: "No se ha podido encontrar el centro deportivo"
+        '500':
+          description: Error interno del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+    patch:
+      tags:
+        - centers
+      summary: Modifica parcialmente un centro
+      description: Modifica parcialmente un centro registrado
+      operationId: patchCenter
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+          examples:
+            Ejemplo1:
+              value: 1
+            Ejemplo2:
+              value: 33
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CenterSchema'
+            examples:
+              Ejemplo1:
+                value:
+                  name: Padel Club
+              Ejemplo2:
+                value:
+                  name: Sport Center padelmania
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Center'
+        '400':
+          description: Faltan campos obligatorios o hay error en el formato de entrada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '404':
+          description: No se ha encontrado el jugador
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceNotFound'
+              example:
+                internalError: 1
+                message: "No se ha podido encontrar el jugador"
+        '500':
+          description: Error interno del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+    delete:
+      tags:
+        - centers
+      operationId: deleteCenter
+      summary: Elimina un centro
+      description: Elimina un centro mediante su ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+          examples:
+            Ejemplo1:
+              value: 1
+            Ejemplo2:
+              value: 33
+      responses:
+        '204':
+          description: Centro deportivo eliminado
+        '404':
+          description: No se ha encontrado el centro deportivo
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceNotFound'
+              example:
+                internalError: 1
+                message: "No se ha podido encontrar el centro deportivo"
+        '500':
+          description: Error interno del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+components:
+  schemas:
+    CenterSchema:
+      required:
+        - name
+        - longitude
+        - latitude
+      type: object
+      properties:
+        name:
+          type: string
+        longitude:
+          type: string
+        latitude:
+          type: string
+    Center:    
+        properties:
+            id:
+              type: integer
+              format: int64
+        allOf:
+          - $ref: '#/components/schemas/CenterSchema'
+        example:
+          id: 1
+          name: Padel Club
+          longitude: -0.545665156846654
+          latitude: -0.32421465156846654
+    PlayerSchema:
+      required:
+        - name
+      type: object
+      properties:
+        name:
+          type: string
+        surname:
+          type: string
+        level:
+          type: string
+        availability:
+          type: boolean
+        image:
+          type: array
+          items:
+            type: string
+            format: byte
+    Player:
+      properties:
+        id:
+          type: integer
+          format: int64
+      allOf:
+        - $ref: '#/components/schemas/PlayerSchema'
+      example:
+        id: 1
+        name: Raul
+        surname: Martin
+        level: Alto
+        availability: true
+        image: null
+    Match:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 1
+        round:
+          type: string
+          example: Ronda 1
+        duration:
+          type: integer
+          example: 60
+          format: int32
+        date:
+          type: string
+          example: 11/04/2022
+        matchScore:
+          type: string
+          example: 6-2, 6-4
+        players:
+          type: array
+          items:
+            $ref: '#/components/schemas/Player'
+        center:
+          $ref: '#/components/schemas/Center'
+    MatchDTO:
+      type: object
+      properties:
+        round:
+          type: string
+        duration:
+          type: integer
+          format: int32
+        date:
+          type: string
+        matchScore:
+          type: string
+        player1:
+          type: integer
+          format: int64
+        player2:
+          type: integer
+          format: int64
+        player3:
+          type: integer
+          format: int64
+        player4:
+          type: integer
+          format: int64
+        center:
+          type: integer
+          format: int64
+    ErrorResponse:
+      properties:
+        internalError:
+          type: number
+          format: int32
+        message:
+          type: string
+      type: object
+    ResourceNotFound:
+      allOf:
+        - type: object
+        - $ref: '#/components/schemas/ErrorResponse'
+    InternalServerError:
+      allOf:
+        - type: object
+        - $ref: '#/components/schemas/ErrorResponse'
+      example:
+        internalError: 3
+        message: "Internal Server Error"
+    BadRequest:
+      properties:
+        campo:
+          type: string
+      type: object
+      example:
+        campo: "El campo no puede ser nulo"
+
+          
