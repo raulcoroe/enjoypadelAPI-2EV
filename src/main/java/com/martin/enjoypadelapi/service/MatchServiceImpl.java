@@ -13,8 +13,11 @@ import com.martin.enjoypadelapi.repository.PlayerRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ReflectionUtils;
 
+import java.lang.reflect.Field;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class MatchServiceImpl implements MatchService {
@@ -42,7 +45,7 @@ public class MatchServiceImpl implements MatchService {
     }
 
     @Override
-    public void addMatch(MatchDTO matchDTO) throws PlayerNotFoundException, CenterNotFoundException {
+    public Match addMatch(MatchDTO matchDTO) throws PlayerNotFoundException, CenterNotFoundException {
         ModelMapper mapper = new ModelMapper();
         Match match = mapper.map(matchDTO, Match.class);
 
@@ -57,7 +60,7 @@ public class MatchServiceImpl implements MatchService {
         player3.getMatches().add(match);
         player4.getMatches().add(match);
         match.setCenter(center);
-        matchRepository.save(match);
+        return matchRepository.save(match);
     }
 
     @Override
@@ -67,25 +70,17 @@ public class MatchServiceImpl implements MatchService {
         matchRepository.delete(match);
     }
 
+
     @Override
-    public Match modifyMatch(long id, MatchDTO matchDTO) throws MatchNotFoundException, PlayerNotFoundException, CenterNotFoundException {
-
-        ModelMapper mapper = new ModelMapper();
-        Match match = mapper.map(matchDTO, Match.class);
-
-        Player player1 = playerRepository.findById(matchDTO.getPlayer1()).orElseThrow(PlayerNotFoundException::new);
-        Player player2 = playerRepository.findById(matchDTO.getPlayer2()).orElseThrow(PlayerNotFoundException::new);
-        Player player3 = playerRepository.findById(matchDTO.getPlayer3()).orElseThrow(PlayerNotFoundException::new);
-        Player player4 = playerRepository.findById(matchDTO.getPlayer4()).orElseThrow(PlayerNotFoundException::new);
-        Center center = centerRepository.findById(matchDTO.getCenter()).orElseThrow(CenterNotFoundException::new);
-
-        player1.getMatches().add(match);
-        player2.getMatches().add(match);
-        player3.getMatches().add(match);
-        player4.getMatches().add(match);
-        match.setCenter(center);
-        match.setId(id);
-        matchRepository.save(match);
-        return match;
+    public Match partialMatchModification(long id, Map<Object, Object> fields) throws MatchNotFoundException {
+        Match match = matchRepository.findById(id)
+                .orElseThrow(()-> new MatchNotFoundException());
+        fields.forEach((k, v) -> {
+            Field field = ReflectionUtils.findField(Match.class, (String) k);
+            field.setAccessible(true);
+            ReflectionUtils.setField(field, match, v);
+        });
+        Match matchModified = matchRepository.save(match);
+        return matchModified;
     }
 }
