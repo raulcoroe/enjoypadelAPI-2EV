@@ -54,13 +54,6 @@ public class MatchController {
         return new ResponseEntity<>(match, HttpStatus.CREATED);
     }
 
-    @PutMapping("/match/{id}")
-    public ResponseEntity<Match> modifyMatch(@PathVariable long id, @Valid @RequestBody MatchDTO matchDto) throws MatchNotFoundException, PlayerNotFoundException, CenterNotFoundException {
-        logger.info("Inicio modifyMatch");
-        Match newMatch = matchService.modifyMatch(id, matchDto);
-        logger.info("Final modifyMatch");
-        return new ResponseEntity<>(newMatch, HttpStatus.OK);
-    }
 
     @PatchMapping("/match/{id}")
     public ResponseEntity<Match> partialMatchModification(@PathVariable long id,@Valid @RequestBody Map<Object, Object> fields) throws MatchNotFoundException {

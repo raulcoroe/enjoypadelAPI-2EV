@@ -38,10 +38,10 @@ public class Player {
 
     @JoinTable(
             name = "rel_players_matches",
-            joinColumns = @JoinColumn(name = "player_id"),
-            inverseJoinColumns = @JoinColumn(name = "match_id")
+            joinColumns = @JoinColumn(name = "FK_PLAYER", nullable = false),
+            inverseJoinColumns = @JoinColumn(name = "FK_MATCH", nullable = false)
     )
-    @ManyToMany
-    @JsonBackReference(value = "player_matches")
+    @JsonBackReference
+    @ManyToMany(cascade = CascadeType.ALL)
     private List<Match> matches;
 }

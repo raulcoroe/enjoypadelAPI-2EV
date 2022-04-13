@@ -40,6 +40,7 @@ public class PlayerServiceImpl implements PlayerService {
     public void deletePlayer(long id) throws PlayerNotFoundException {
         Player player = playerRepository.findById(id)
                 .orElseThrow(PlayerNotFoundException::new);
+        player.setMatches(null);
         playerRepository.delete(player);
     }
 

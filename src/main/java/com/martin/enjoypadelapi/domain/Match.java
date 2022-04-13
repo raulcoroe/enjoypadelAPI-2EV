@@ -37,8 +37,9 @@ public class Match {
     @Column
     private String matchScore;
 
-    @ManyToMany(mappedBy = "matches", cascade = CascadeType.ALL)
+    @ManyToMany(mappedBy = "matches")
     private List<Player> players;
+
 
     @ManyToOne
     @JoinColumn(name = "center_id")
